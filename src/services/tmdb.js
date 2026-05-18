@@ -19,3 +19,11 @@ export async function searchMovies(query) {
     const data = await res.json()
     return data.results
 }
+
+export async function fetchMovieDetail(id) {
+    const res = await fetch(
+        `${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=pt-BR`
+    )
+    if (!res.ok) throw new Error("Filme não encontrado")
+    return res.json()
+}
