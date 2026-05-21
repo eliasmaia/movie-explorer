@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react'
 import { fetchMovieDetail } from "../services/tmdb";
 import { useFavorites } from "../context/FavoritesContext";
+import '../components/MovieDetail.css'
 
 export function MovieDetail() {
     const {id}                  = useParams() //      ↑ pega o :id da URL — se a URL for /movie/123, id === '123'
@@ -35,28 +36,44 @@ export function MovieDetail() {
         if (favorited) {
             removeFavorite(movie.id)
         } else {
-            addFavorite({ id: movie.id, title: movie.title, poster_path: movie.poster_path, vote_average: movie.vote_average })
+            addFavorite({ 
+                id: movie.id,
+                title: movie.title,
+                poster_path: movie.poster_path,
+                vote_average: movie.vote_average 
+            })
         }
     }
 
     return (
-        <div>
-            <button onClick={() => navigate(-1)}>← Voltar</button>
-            {/* navigate(-1) é equivalente ao botão voltar do browser */}
+        <div className="detail-container">
+            <div className="detail-actions">
+                <button className="btn-back" onClick={() => navigate(-1)}>← Voltar</button>
             
-            <button onClick={handleFavorite}>
-                {favorited ? '❤️ Remover dos favoritos' : '🤍 Favoritar'}
-                {/* ternário — muda o texto dependendo se já é favorito */}
-            </button>
+                <button className={`btn-favorite ${favorited ? 'favorited' : ''}`}
+                        onClick={handleFavorite}
+                >
+                    {favorited ? '❤️ Remover dos favoritos' : '🤍 Favoritar'}
+                    {/* ternário — muda o texto dependendo se já é favorito */}
+                </button>
+            </div>
+            <div className="detail-content"> 
+                {posterUrl 
+                ? <img className="detail-poster" src={posterUrl} alt={movie.title} />
+                : <div className="detail-poster-placeholder">🎬</div>
+                }
 
-            <div> 
-                {posterUrl && <img src={posterUrl} alt={movie.title} />}
-                <div>
+                <div className="detail-info">
                     <h1>{movie.title}</h1>
-                    <p>{movie.overview}</p>
-                    <p>⭐{movie.vote_average?.toFixed(1)}</p>
-                    <p>📅{movie.release_date}</p>
-                    <p>⏱ {movie.runtime} min</p>
+                    
+                    <div className="detail-meta">
+                        <span>⭐{movie.vote_average?.toFixed(1)}</span>
+                        <span>📅{movie.release_date}</span>
+                        {movie.runtime > 0 && <span>⏱ {movie.runtime} min</span>}
+                    </div>
+
+                    <p className="detail-overview">{movie.overview}</p>                   
+                    
                 </div>
             </div>
         </div>

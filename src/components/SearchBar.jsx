@@ -14,7 +14,7 @@ export function SearchBar({ onSearch }) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="search-bar" onSubmit={handleSubmit}>
             <input
                 type="text"
                 value = {query}
